@@ -1,0 +1,30 @@
+services:
+  desaklepu.id:
+    # image: webdevops/php-nginx:8.0-alpine
+    build: .
+    container_name: desaklepu.id
+    restart: always
+    volumes:
+      - .:/app
+      - ./.docker/vhost.conf:/opt/docker/etc/nginx/vhost.conf
+    ports:
+      - "8431:80"
+    environment:
+      - SCHEDULER_SERVICE_HOST=scheduler
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 8192M
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 49999
+        hard: 99999
+
+    networks:
+      - mariadb_roninbox
+
+networks:
+  mariadb_roninbox:
+    external: true
